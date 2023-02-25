@@ -36,10 +36,15 @@ class CharList extends Component {
             thumnailStyle = { 'objectFit': 'contain' }
         }
         
-        return <li key={item.id} className="char__item">
-            <img src={item.thumbnail} alt={item.name} style={thumnailStyle} />
-            <div className="char__name">{item.name}</div>
-        </li>
+        return (
+            <li
+                key={item.id}
+                className="char__item"
+                onClick={() => this.props.onCharSelected(item.id)}>
+                <img src={item.thumbnail} alt={item.name} style={thumnailStyle} />
+                <div className="char__name">{item.name}</div>
+            </li>
+        )
 
     }
 

@@ -77,7 +77,7 @@ class RandomChar extends Component {
 
 const View = ({char}) => {
     const { name, description, thumbnail, homepage, wiki } = char;
-    let thumnailStyle = null
+    let thumnailStyle = { 'objectFit': 'cover' }
     if (thumbnail.slice(-23) === 'image_not_available.jpg') {
         thumnailStyle = {'objectFit': 'contain'}
     } 
