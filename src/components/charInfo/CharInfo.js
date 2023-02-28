@@ -1,4 +1,5 @@
 import { Component } from 'react/cjs/react.production.min';
+import PropTypes from 'prop-types'; // ES6
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -105,7 +106,7 @@ const View = ({ char }) => {
                 </div>
             </div>
             <div className="char__descr">
-                {description}
+                {description ? char.description : 'There is no information about the character.'}
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
@@ -124,6 +125,10 @@ const View = ({ char }) => {
             </ul>
         </>
     )
+}
+
+CharInfo.propTypes = {
+    charId: PropTypes.number
 }
 
 export default CharInfo;
