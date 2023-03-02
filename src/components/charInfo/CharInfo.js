@@ -97,6 +97,20 @@ class View extends Component {
             thumnailStyle = { 'objectFit': 'contain' }
         }
 
+        const listItems = (arr) => {
+            return arr.map((item, i) => {
+                // eslint-disable-next-line
+                if (i > 9) return;
+                return (
+                    <li key={i} className={this.props.accordionState ? 'char__comics-item' : 'char__comics-hiddenitem'}>
+                        {item.name}
+                    </li>
+                )
+            })
+        }
+
+        // console.log(listItems(comics))
+
         return (
             <>
                 <div className="char__basics">
@@ -118,22 +132,12 @@ class View extends Component {
                 </div>
 
                 <button className={this.props.accordionState ? 'char__accordion char__accordion-opened' : 'char__accordion'} onClick={this.props.onAccordion}>
-                    <i class="arrow right"></i> Comics:
+                    Comics:
                 </button>
 
                 <ul className='char__comics-list'>
                     {comics.length > 0 ? null : 'There are no comsics with this character'}
-                    {
-                        comics.map((item, i) => {
-                            // eslint-disable-next-line
-                            if (i > 9) return;
-                            return (
-                                <li key={i} className={this.props.accordionState ? 'char__comics-item' : 'char__comics-hiddenitem'}>
-                                    {item.name}
-                                </li>
-                            )
-                        })
-                    }
+                    {listItems(comics)}
                 </ul>
             </>
         )
