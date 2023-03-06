@@ -1,4 +1,4 @@
-import { Component } from 'react/cjs/react.production.min';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'; // ES6
 
 import Spinner from '../spinner/Spinner';
@@ -8,140 +8,119 @@ import Skeleton from '../skeleton/Skeleton';
 import './charInfo.scss';
 import MarvelService from '../../services/MarvelService';
 
-class CharInfo extends Component {
+import { Component } from 'react/cjs/react.production.min';
 
-    state = {
-        char: null,
-        loading: false,
-        error: false,
-        accordion: false
-    }
+const CharInfo = (props) => {
 
-    marvelService = new MarvelService();
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [accordion, setAccordion] = useState(false);
 
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.updateChar();
-    }
+    useEffect(() => {
+        updateChar();
+    }, [props.charId])
 
-    componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateChar();
-        }
-    }
-
-    updateChar = () => {
-        const { charId } = this.props
+    const updateChar = () => {
+        const { charId } = props
         if (!charId) {
             return;
         }
 
-        this.onCharLoading();
+        onCharLoading();
 
-        this.marvelService
+        marvelService
             .getCharacter(charId)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
+            .then(onCharLoaded)
+            .catch(onError)
     }
 
-
-    onCharLoaded = (char) => {
-        this.setState({ char, loading: false })
+    const onCharLoaded = (char) => {
+        setChar(char);
+        setLoading(false);
     }
 
-    onCharLoading = () => {
-        this.setState({
-            loading: true
-        })
+    const onCharLoading = () => {
+        setLoading(true);
     }
 
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        })
+    const onError = () => {
+        setLoading(false);
+        setError(true);
     }
 
-    onAccordion = () => {
-        this.setState(({ accordion }) => ({
-            accordion: !accordion
-        }))
+    const onAccordion = () => {
+        setAccordion(accordion => !accordion)
     }
 
-    render() {
-        const { char, loading, error } = this.state;
+    const skeleton = char || loading || error ? null : <Skeleton />
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error || !char) ? <View char={char} onAccordion={onAccordion} accordionState={accordion} /> : null;
 
-        const skeleton = char || loading || error ? null : <Skeleton />
-        const errorMessage = error ? <ErrorMessage /> : null;
-        const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error || !char) ? <View char={char} onAccordion={this.onAccordion} accordionState={this.state.accordion} /> : null;
-
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {spinner}
-                {content}
-            </div>
-        )
-    }
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMessage}
+            {spinner}
+            {content}
+        </div>
+    )
 }
 
-class View extends Component {
+const View = (props) => {
 
-    render() {
-        const { name, description, thumbnail, homepage, wiki, comics } = this.props.char;
+    const { name, description, thumbnail, homepage, wiki, comics } = props.char;
 
-        let thumnailStyle = { 'objectFit': 'cover' }
-        if (thumbnail.slice(-23) === 'image_not_available.jpg') {
-            thumnailStyle = { 'objectFit': 'contain' }
-        }
+    let thumnailStyle = { 'objectFit': 'cover' }
+    if (thumbnail.slice(-23) === 'image_not_available.jpg') {
+        thumnailStyle = { 'objectFit': 'contain' }
+    }
 
-        const listItems = (arr) => {
-            return arr.map((item, i) => {
-                // eslint-disable-next-line
-                if (i > 9) return;
-                return (
-                    <li key={i} className={this.props.accordionState ? 'char__comics-item' : 'char__comics-hiddenitem'}>
-                        {item.name}
-                    </li>
-                )
-            })
-        }
+    const listItems = (arr) => {
+        return arr.map((item, i) => {
+            // eslint-disable-next-line
+            if (i > 9) return;
+            return (
+                <li key={i} className={props.accordionState ? 'char__comics-item' : 'char__comics-hiddenitem'}>
+                    {item.name}
+                </li>
+            )
+        })
+    }
 
-        // console.log(listItems(comics))
-
-        return (
-            <>
-                <div className="char__basics">
-                    <img src={thumbnail} alt={name} style={thumnailStyle} />
-                    <div>
-                        <div className="char__info-name">{name}</div>
-                        <div className="char__btns">
-                            <a href={homepage} className="button button__main">
-                                <div className="inner">homepage</div>
-                            </a>
-                            <a href={wiki} className="button button__secondary">
-                                <div className="inner">Wiki</div>
-                            </a>
-                        </div>
+    return (
+        <>
+            <div className="char__basics">
+                <img src={thumbnail} alt={name} style={thumnailStyle} />
+                <div>
+                    <div className="char__info-name">{name}</div>
+                    <div className="char__btns">
+                        <a href={homepage} className="button button__main">
+                            <div className="inner">homepage</div>
+                        </a>
+                        <a href={wiki} className="button button__secondary">
+                            <div className="inner">Wiki</div>
+                        </a>
                     </div>
                 </div>
-                <div className="char__descr">
-                    {description ? description : 'There is no information about the character.'}
-                </div>
+            </div>
+            <div className="char__descr">
+                {description ? description : 'There is no information about the character.'}
+            </div>
 
-                <button className={this.props.accordionState ? 'char__accordion char__accordion-opened' : 'char__accordion'} onClick={this.props.onAccordion}>
-                    Comics:
-                </button>
+            <button className={props.accordionState ? 'char__accordion char__accordion-opened' : 'char__accordion'} onClick={props.onAccordion}>
+                Comics:
+            </button>
 
-                <ul className='char__comics-list'>
-                    {comics.length > 0 ? null : 'There are no comsics with this character'}
-                    {listItems(comics)}
-                </ul>
-            </>
-        )
-    }
+            <ul className='char__comics-list'>
+                {comics.length > 0 ? null : 'There are no comsics with this character'}
+                {listItems(comics)}
+            </ul>
+        </>
+    )
 }
 
 CharInfo.propTypes = {
