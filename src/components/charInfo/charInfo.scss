@@ -82,6 +82,7 @@
             transition: all 1s ease-in-out;
         }
         &-item {
+            overflow: hidden;
             height: 25px;
             transition: all 1s ease-in-out;
             padding: 0px 10px;
