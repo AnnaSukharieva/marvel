@@ -53,7 +53,6 @@ const RandomChar = () => {
 
 const View = ({ char }) => {
     const { name, description, thumbnail, homepage, wiki } = char;
-    console.log(thumbnail);
 
     let thumnailStyle = { 'objectFit': 'cover' }
     if (thumbnail.slice(-23) === 'image_not_available.jpg') {

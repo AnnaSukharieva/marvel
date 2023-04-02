@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'; // ES6
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import Skeleton from '../skeleton/Skeleton';
-
-import './charInfo.scss';
 import useMarvelService from '../../services/MarvelService';
+import Skeleton from "../skeleton/Skeleton";
+
+
+import "./charInfo.scss";
 
 const CharInfo = (props) => {
 
