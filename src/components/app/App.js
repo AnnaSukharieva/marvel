@@ -22,7 +22,7 @@ const App = () => {
         <main>
           <Suspense fallback={<Spinner></Spinner>}>
             <Routes>
-              <Route path="/" element={<MainPage />} />
+              <Route path="/characters" element={<MainPage />} />
               <Route path="/comics" element={<ComicsPage />} />
               <Route
                 path="/comics/:id"
