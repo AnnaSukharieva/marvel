@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
@@ -17,6 +18,10 @@ const MainPage = () => {
 
   return (
     <>
+      <Helmet>
+        <meta name="description" content="Marvel information portal" />
+        <title>Marvel information portal</title>
+      </Helmet>
       <ErrorBoundary>
         <RandomChar />
       </ErrorBoundary>
@@ -24,7 +29,7 @@ const MainPage = () => {
         <ErrorBoundary>
           <CharList onCharSelected={onCharSelected} />
         </ErrorBoundary>
-        <div style={{ position: "sticky", top: "25px", zIndex:'3'}}>
+        <div style={{ position: "sticky", top: "25px", zIndex: "3" }}>
           <ErrorBoundary>
             <CharInfo charId={selectedChar} />
           </ErrorBoundary>
